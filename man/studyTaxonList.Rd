@@ -4,22 +4,24 @@
 \alias{studyTaxonList}
 \title{Study Taxon Vector}
 \usage{
-studyTaxonList(x)
+studyTaxonList(x = NULL, datasources = NULL)
 }
 \arguments{
-\item{x}{}
+\item{x}{A phylogeny of class 'phylo' or a vector of class 'character' containing the names of taxa of interest}
+
+\item{datasources}{A vector of taxonomic datasources implemented in \code{\link{gnr_resolve}}. See \code{\link{http://gni.globalnames.org/} for more information.}}
 }
 \value{
-nameVector
+nameVector A dataframe containing the input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
 }
 \description{
 Takes input phylogenies or vectors of taxon names, checks against taxonomic database, returns vector for use in spocc queries, as well as warnings if there are invalid names.
 }
 \examples{
 ## Inputting a phylogeny
-studyTaxonList(x = phylogeny);
+studyTaxonList(x = phylogeny, datasources = c('NCBI', 'EOL'));
 
 ## Inputting a vector of taxon names
-studyTaxonList(x = c("Buteo buteo", "Buteo buteo hartedi", "Buteo japonicus"));
+studyTaxonList(x = c("Buteo buteo", "Buteo buteo hartedi", "Buteo japonicus"), datasources = c('NCBI', 'EOL'));
 
 }
