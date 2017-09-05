@@ -1,4 +1,4 @@
-#' @title Study Taxon Vector
+#' @title Study Taxon List
 #'
 #' @description Takes input phylogenies or vectors of taxon names, checks against taxonomic database, returns vector for use in spocc queries, as well as warnings if there are invalid names.
 #'
@@ -6,7 +6,7 @@
 #'
 #' @param datasources A vector of taxonomic datasources implemented in \code{\link{gnr_resolve}}. See \code{\link{http://gni.globalnames.org/} for more information.}
 #'
-#' @return nameVector A dataframe containing the input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
+#' @return bridgeTreeDataInstance An object of class \code{\link{BridgeTreeData}} containing the type of inquiry the user has made --a phylogeny or a vector of names-- and a dataframe containing input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
 #'
 #' @examples
 #' ## Inputting a phylogeny
@@ -33,7 +33,7 @@ studyTaxonList <- function(x = NULL, datasources = NULL) {
 
   #Filling in data sources if none have been specified by the user.
   if (is.null(datasources)){
-    datasources <- gnr_datasources(todf = T)$title
+    datasources <- taxize::gnr_datasources(todf = T)$title
   }
 
   #Are the user-input databases a vector of class character?
@@ -43,7 +43,7 @@ studyTaxonList <- function(x = NULL, datasources = NULL) {
   }
 
   #Are user-input databases included in the list of data sources for Global Names Resolver?
-  sourceList <- gnr_datasources(todf = T)$title #Populates the list of datasources
+  sourceList <- taxize::gnr_datasources(todf = T)$title #Populates the list of datasources
   for (db in datasources){
     notInDB <- character()
     if (!(db %in% sourceList)) {
@@ -59,11 +59,11 @@ studyTaxonList <- function(x = NULL, datasources = NULL) {
   #Populating vector of data sources if no valid sources are supplied
   if (length(datasources) == 0){
     warning("No valid taxonomic data sources supplied. Populating default list from all available sources.");
-    datasources = gnr_datasources()$title;
+    datasources = taxize::gnr_datasources()$title;
   }
 
   #Resolving the user-input taxonomic names
-  sources <- gnr_datasources();
+  sources <- taxize::gnr_datasources();
   sourceIDs <- sources$id[sources$title %in% datasources]
   #Protects against an error thrown when giving gnr_resolve a complete list of data sources
   if (nrow(sources) == length(sourceIDs)){
@@ -72,7 +72,7 @@ studyTaxonList <- function(x = NULL, datasources = NULL) {
   bestNameMatch <- character();
   taxonomicDatabaseMatches <- vector("list");
   for (name in targets){
-    temp <- gnr_resolve(names = name, data_source_ids = sourceIDs);
+    temp <- taxize::gnr_resolve(names = name, data_source_ids = sourceIDs);
     if (length(temp) == 0){
       bestNameMatch <- append(bestNameMatch, "No match");
       taxonomicDatabaseMatches <- append(taxonomicDatabaseMatches, NA);
@@ -90,5 +90,8 @@ studyTaxonList <- function(x = NULL, datasources = NULL) {
   resolvedNames <- cbind(targets, bestNameMatch, taxonomicDatabaseMatches);
   colnames(resolvedNames) <- c("Input Name", "Best Match", "Taxonomic Databases w/ Matches");
   resolvedNames <- as.data.frame(resolvedNames);
-  return(resolvedNames);
+
+  #Populating an instance of class bridgeTreeData
+  bridgeTreeInstance <- new("bridgeTreeData", userQueryType = dataFrom, taxonomicSources = datasources, cleanedTaxonomy = resolvedNames);
+  return(bridgeTreeInstance);
 }

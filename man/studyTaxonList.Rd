@@ -2,7 +2,7 @@
 % Please edit documentation in R/studyTaxonList.R
 \name{studyTaxonList}
 \alias{studyTaxonList}
-\title{Study Taxon Vector}
+\title{Study Taxon List}
 \usage{
 studyTaxonList(x = NULL, datasources = NULL)
 }
@@ -12,7 +12,7 @@ studyTaxonList(x = NULL, datasources = NULL)
 \item{datasources}{A vector of taxonomic datasources implemented in \code{\link{gnr_resolve}}. See \code{\link{http://gni.globalnames.org/} for more information.}}
 }
 \value{
-nameVector A dataframe containing the input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
+bridgeTreeDataInstance An object of class \code{\link{BridgeTreeData}} containing the type of inquiry the user has made --a phylogeny or a vector of names-- and a dataframe containing input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
 }
 \description{
 Takes input phylogenies or vectors of taxon names, checks against taxonomic database, returns vector for use in spocc queries, as well as warnings if there are invalid names.
