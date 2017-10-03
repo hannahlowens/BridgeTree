@@ -9,6 +9,7 @@
 #' @examples
 #' hello(nTimes = 2);
 #'
+#' @export
 
 hello <- function(nTimes) {
   count <- 1;

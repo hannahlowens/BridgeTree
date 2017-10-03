@@ -11,11 +11,16 @@
 #' @slot occSources A vector of class "character" containing a list of occurrence data sources, generated when passing a \code{\link{bridgeTreeData}} object through \code{\link{taxaQuery}}.
 #'
 #' @slot occNLimit The limit of occurrence records to return for each species when executing \code{\link{occ}} through \code{\link{taxaQuery}}.
+#'
+#' @slot occResults The results of an \code{\link{taxQuery}} search, stored as a named list, each of the items named after a searched taxon and containing a dataframe with occurrence information.
+#'
+#' @export
 
 bridgeTreeData <- setClass("bridgeTreeData",
                     slots = c(userQueryType = "vector",
                               taxonomicSources = "vector",
                               cleanedTaxonomy = "data.frame",
                               occSources = "vector",
-                              occNLimit = "numeric")
+                              occNLimit = "numeric",
+                              occResults = "list")
                     )

@@ -19,23 +19,31 @@
 #' ## PLACEHOLDER
 #' studyTaxonList(x = c("Buteo buteo", "Buteo buteo hartedi", "Buteo japonicus"), datasources = c('NCBI', 'EOL'));
 #'
+#' @export
 
 taxaQuery <- function(x = NULL, datasources = "gbif", limit = 500, options = NULL) {
   #Error check input x.
-  if (!class(x) == "data.frame"){
-    warning("Input x is not of class 'data.frame'. Input x must be result of a studyTaxonList() search.\n");
+  if (!class(x)=="bridgeTreeData"){
+    warning("Input x is not of class 'bridgeTreeData'. Input x must be result of a studyTaxonList() search.\n");
     return(NULL);
   }
 
   #Error check input datasources.
-  if (!is.vector(datasources) && class(x)=="character"){
-    warning("Input datasources is not of class 'data.frame'. Datasources object must be a vector of class 'character'.\n");
+  if (!is.vector(datasources) && class(datasources)=="character"){
+    warning("Input datasources is not of class 'vector'. Datasources object must be a vector of class 'character'.\n");
     return(NULL);
   }
+
   #Check to see if the sources input are actually ones used by occ()
   sources <- c("gbif", "bison", "obis", "ala", "inat", "idigbio", "ebird", "ecoengine", "vertnet"); #occ() sources
   if(sum(!datasources %in% sources) > 0){
     warning(paste("The following datasources are not implemented in occ(): ", datasources[!datasources %in% sources], sep = ""));
+    return(NULL);
+  }
+
+  #Check "limit" input.
+  if (!class(limit)=="numeric"){
+    warning("Input limit is not of class 'numeric'. Limit value must be class 'numeric'.\n");
     return(NULL);
   }
 

@@ -6,7 +6,7 @@
 #'
 #' @param datasources A vector of taxonomic datasources implemented in \code{\link{gnr_resolve}}. See \code{\link{http://gni.globalnames.org/} for more information.}
 #'
-#' @return bridgeTreeDataInstance An object of class \code{\link{BridgeTreeData}} containing the type of inquiry the user has made --a phylogeny or a vector of names-- and a dataframe containing input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
+#' @return An object of class \code{\link{BridgeTreeData}} containing the type of inquiry the user has made --a phylogeny or a vector of names-- and a dataframe containing input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
 #'
 #' @examples
 #' ## Inputting a phylogeny
@@ -15,6 +15,7 @@
 #' ## Inputting a vector of taxon names
 #' studyTaxonList(x = c("Buteo buteo", "Buteo buteo hartedi", "Buteo japonicus"), datasources = c('NCBI', 'EOL'));
 #'
+#' @export
 
 studyTaxonList <- function(x = NULL, datasources = NULL) {
   #Error check inputs (x).
