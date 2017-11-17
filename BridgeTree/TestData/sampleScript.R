@@ -10,4 +10,4 @@ queryResults <- studyTaxonList(x = tree);
 
 #Query databases for occurrence data
 sources <- c("gbif", "bison", "obis", "ala", "inat", "idigbio", "ebird", "ecoengine", "vertnet");
-occurrences <- occ(as.character(queryResults@cleanedTaxonomy$`Best Match`), from = sources, limit = 10);
+occurrences <- occ(as.character(queryResults@cleanedTaxonomy$`Best Match`[1]), from = sources, limit = 10);
