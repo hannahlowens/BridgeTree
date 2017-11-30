@@ -10,7 +10,7 @@
 #'
 #' @param options A vector of options to pass to \code{\link{occ}}.
 #'
-#' @return pointsList A list containing results from each species' \code{\link{occ}} search, including metadata.
+#' @return occurrenceData The object of class \code{\link{bridgeTreeData}} supplied by the user as an argument, with occurrence data search results, as well as metadata on the occurrence sources queried and the limit of occurrence point records downloaded.
 #'
 #' @examples
 #' ## PLACEHOLDER
@@ -40,14 +40,25 @@ taxaQuery <- function(x = NULL, datasources = "gbif", limit = 500, options = NUL
     warning(paste("The following datasources are not implemented in occ(): ", datasources[!datasources %in% sources], sep = ""));
     return(NULL);
   }
+  else{
+    x@occSources <- sources;
+  }
 
   #Check "limit" input.
   if (!class(limit)=="numeric"){
     warning("Input limit is not of class 'numeric'. Limit value must be class 'numeric'.\n");
     return(NULL);
   }
+  else{
+    x@occNLimit <- limit;
+  }
 
-  #Return a thing
-  occurrenceData <- "It worked!";
+  #Get time stamp for search
+  x@occurrenceSearchDate <- as.character(Sys.Date(), format = "%d %B, %Y");
+
+  #Occurrence queries for each species
+  occurrenceData <- x;
+  occurrenceResults <- occ(query = unlist(queryResults@cleanedTaxonomy$`Best Match`), from = "gbif", limit = limit, has_coords = T);
+
   return(occurrenceData);
 }

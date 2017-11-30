@@ -16,7 +16,7 @@ taxaQuery(x = NULL, datasources = "gbif", limit = 500, options = NULL)
 \item{options}{A vector of options to pass to \code{\link{occ}}.}
 }
 \value{
-pointsList A list containing results from each species' \code{\link{occ}} search, including metadata.
+occurrenceData The object of class \code{\link{bridgeTreeData}} supplied by the user as an argument, with occurrence data search results, as well as metadata on the occurrence sources queried and the limit of occurrence point records downloaded.
 }
 \description{
 Takes rectified list of specimens from \code{\link{studyTaxonList}} and returns point data from \code{\link{occ}} with metadata.

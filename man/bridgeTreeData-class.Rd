@@ -20,5 +20,9 @@ A class for managing metadata associated with bridgeTree queries and data manipu
 \item{\code{occSources}}{A vector of class "character" containing a list of occurrence data sources, generated when passing a \code{\link{bridgeTreeData}} object through \code{\link{taxaQuery}}.}
 
 \item{\code{occNLimit}}{The limit of occurrence records to return for each species when executing \code{\link{occ}} through \code{\link{taxaQuery}}.}
+
+\item{\code{occurrenceSearchDate}}{The date on which the occurrence search query was conducted.}
+
+\item{\code{occResults}}{The results of an \code{\link{taxQuery}} search, stored as a named list, each of the items named after a searched taxon and containing a dataframe with occurrence information.}
 }}
 
