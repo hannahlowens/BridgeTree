@@ -15,7 +15,7 @@ studyTaxonList(x = NULL, datasources = NULL)
 An object of class \code{\link{BridgeTreeData}} containing the type of inquiry the user has made --a phylogeny or a vector of names-- and a dataframe containing input taxa names, the closeset match according to \code{\link{gnr_resolve}}, and a list of taxonomic datasources that contain the matching name.
 }
 \description{
-Takes input phylogenies or vectors of taxon names, checks against taxonomic database, returns vector for use in spocc queries, as well as warnings if there are invalid names.
+Takes input phylogenies or vectors of taxon names, checks against taxonomic database, returns vector of cleaned taxonomic names (using \code{\link{taxonRectification}}) for use in spocc queries, as well as warnings if there are invalid names.
 }
 \examples{
 ## Inputting a phylogeny

@@ -15,10 +15,28 @@
 #' @export
 
 taxonRectification <- function(taxName = NULL, datasources = NULL) {
-  #Filling in data sources if none have been specified by the function calling this helper.
-  if (is.null(datasources)){
-    datasources <- taxize::gnr_datasources(todf = T)$title
+  #Are user-input databases included in the list of data sources for Global Names Resolver?
+  sourceList <- taxize::gnr_datasources(todf = T)$title #Populates the list of datasources
+  if(!is.null(datasources)){
+    for (db in datasources){
+      notInDB <- character()
+      if (!(db %in% sourceList)) {
+        notInDB <- append(notInDB, db)
+      }
+    }
+    if (length(notInDB) != 0){
+      warning(paste("The following sources were not found in Global Names Index source list: ", paste(notInDB, collapse = ', '), sep=""));
+    }
+    #Remove invalid sources from datasources
+    datasources <- datasources[!datasources %in% notInDB];
   }
+
+  #Populating vector of data sources if no valid sources are supplied
+  if (length(datasources) == 0){
+    warning("No valid taxonomic data sources supplied. Populating default list from all available sources.");
+    datasources = taxize::gnr_datasources(todf = T)$title;
+  }
+
 
   #Resolving the user-input taxonomic names
   sources <- taxize::gnr_datasources();
@@ -34,7 +52,7 @@ taxonRectification <- function(taxName = NULL, datasources = NULL) {
     bestNameMatch <- append(bestNameMatch, "No match");
     taxonomicDatabaseMatches <- append(taxonomicDatabaseMatches, NA);
     warning(paste(taxName, " is not found in any of the taxonomic data sources specified.", sep = ""));
-    }
+  }
   else {
     bestMatch <- temp[order(temp$score),]$matched_name[1];
     bestNameMatch <- append(bestNameMatch, bestMatch);
@@ -43,8 +61,9 @@ taxonRectification <- function(taxName = NULL, datasources = NULL) {
   }
 
   #Building the results table
-  resolvedName <- cbind(taxName, bestNameMatch, taxonomicDatabaseMatches);
-  names(resolvedName) <- c("Input Name", "Best Match", "Taxonomic Databases w/ Matches");
-  resolvedName <- as.data.frame(resolvedName);
-  return(resolvedName);
+  resolvedNames <- data.frame(taxName, bestNameMatch, taxonomicDatabaseMatches);
+  colnames(resolvedNames) <- c("Input Name", "Best Match", "Searched Taxonomic Databases w/ Matches");
+  resolvedNames <- as.data.frame(resolvedNames);
+
+  return(resolvedNames);
 }
