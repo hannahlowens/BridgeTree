@@ -3,7 +3,8 @@ library(ape);
 
 #Get tree
 tree <- read.nexus("~/Dropbox/BridgeTree/TestData/Fish_12Tax_time_calibrated.tre");
-
+# try
+tree <- read.nexus(system.file("extdata/Fish_12Tax_time_calibrated.tre",package='BridgeTree'))
 #Query databases for names
 myBridgeTreeObject <- studyTaxonList(x = tree, datasources = "NCBI");
 
@@ -15,3 +16,5 @@ myBridgeTreeObject <- occQuery(x = myBridgeTreeObject, GBIFLogin = login);
 
 #Get citations
 myOccCitations <- occCitation(myBridgeTreeObject);
+
+
