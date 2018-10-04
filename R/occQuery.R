@@ -8,7 +8,7 @@
 #'
 #' @param GBIFLogin An object of class \code{\link{GBIFLogin}} to log in to GBIF to begin the download.
 #' 
-#' @param GBIFDownloadDirectory An optional argument that specifies the local directory where GBIF downloads will be saved.
+#' @param GBIFDownloadDirectory An optional argument that specifies the local directory where GBIF downloads will be saved. If this is not specified, the downloads will be saved to your current working directory.
 #'
 #' @param options A vector of options to pass to \code{\link{occ_download}}.
 #'
@@ -47,6 +47,15 @@ occQuery <- function(x = NULL, datasources = c("gbif", "bien"), GBIFLogin = NULL
     return(NULL);
   }
   
+  if(is.null(GBIFDownloadDirectory)){
+    GBIFDownloadDirectory <- getwd();
+  }
+  
+  if(!file.exists(GBIFDownloadDirectory)){
+    warning("You have specified a non-existant location for your GBIF data downloads.\n");
+    return(NULL);
+  }
+  
   #Check to see if the sources input are actually ones used by occQuery
   sources <- c("gbif", "bien"); #sources
   if(sum(!datasources %in% sources) > 0){
@@ -60,11 +69,6 @@ occQuery <- function(x = NULL, datasources = c("gbif", "bien"), GBIFLogin = NULL
   #If GBIF was selected, check to see if GBIF login information is supplied.
   if ("gbif" %in% datasources && !class(GBIFLogin)=="GBIFLogin"){
     warning("You have chosen GBIF as a datasource, but have not supplied GBIF login information. Please create a GBIFLogin object using GBIFLoginManager().\n");
-    return(NULL);
-  }
-  
-  if(!file.exists(GBIFDownloadDirectory)){
-    warning("You have specified a non-existant location for your GBIF data downloads.\n");
     return(NULL);
   }
 

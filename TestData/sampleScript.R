@@ -12,7 +12,7 @@ myBridgeTreeObject <- studyTaxonList(x = tree, datasources = "NCBI");
 login <- GBIFLoginManager(user = "******",
                           email = "*****@*****",
                           pwd = "*****");
-myBridgeTreeObject <- occQuery(x = myBridgeTreeObject, GBIFLogin = login);
+myBridgeTreeObject <- occQuery(x = myBridgeTreeObject, GBIFLogin = login, GBIFDownloadDirectory = "~/Desktop");
 
 #Get citations
 myOccCitations <- occCitation(myBridgeTreeObject);
