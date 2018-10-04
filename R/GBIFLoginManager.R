@@ -41,6 +41,13 @@ GBIFLoginManager <- function(user = NULL, email = NULL, pwd = NULL) {
   email <- check_email(email)
   pwd <- check_pwd(pwd)
 
+  #Test login
+  test <- try(rgbif::occ_download(user=user, email = email, pwd = pwd, "catalogNumber = Bird.27847588"), silent = T);
+  if(class(test) != 'occ_download'){
+    warning("GBIF user login data incorrect.\n");
+    return(NULL);
+  }
+  
   #Populating an instance of class bridgeTreeData
   loginInstance <- new("GBIFLogin", username = user, email = email, pwd = pwd);
   return(loginInstance);
