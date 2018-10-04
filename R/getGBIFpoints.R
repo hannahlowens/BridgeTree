@@ -15,7 +15,7 @@ library(rgbif)
 #'
 #' @export
 
-getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin){
+getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GBIFDownloadDirectory){
 
   key <- rgbif::name_suggest(q=taxon, rank='species')$key[1]
   occD <- rgbif::occ_download(paste("taxonKey = ", key, sep = ""),
@@ -29,7 +29,7 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin){
     print(paste("Still waiting for", taxon, "download preparation to be completed."))
   }
 
-  dir.create(file.path(getwd(), taxon), showWarnings = FALSE);
+  dir.create(file.path(setwd(GBIFDownloadDirectory), taxon), showWarnings = FALSE);
   res <- rgbif::occ_download_get(key=occD[1], overwrite=TRUE,
                                  file.path(getwd(), taxon));
   occFromGBIF <- rgbif::occ_download_import(res);

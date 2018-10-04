@@ -21,7 +21,7 @@
 #'
 #' @export
 
-occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, options = NULL) {
+occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, GBIFDownloadDirectory = NULL, options = NULL) {
   #Error check input x.
   if (!class(x)=="bridgeTreeData"){
     warning("Input x is not of class 'bridgeTreeData'. Input x must be result of a studyTaxonList() search.\n");
@@ -33,7 +33,18 @@ occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, options =
     warning("Input datasources is not of class 'vector'. Datasources object must be a vector of class 'character'.\n");
     return(NULL);
   }
+  
+  #Error check input GBIF directory.
+  if ("gbif" %in% datasources && !is.null(GBIFDownloadDirectory) && class(GBIFDownloadDirectory) != "characer"){
+    warning("Input GBIFDownload directory is not of class 'character'.\n");
+    return(NULL);
+  }
 
+  if ("gbif" %in% datasources && !is.null(GBIFDownloadDirectory) && class(GBIFDownloadDirectory) != "characer"){
+    warning("Input GBIFDownload directory is not of class 'character'.\n");
+    return(NULL);
+  }
+  
   #Check to see if the sources input are actually ones used by occQuery
   sources <- c("gbif", "bien"); #sources
   if(sum(!datasources %in% sources) > 0){
@@ -47,6 +58,11 @@ occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, options =
   #If GBIF was selected, check to see if GBIF login information is supplied.
   if ("gbif" %in% datasources && !class(GBIFLogin)=="GBIFLogin"){
     warning("You have chosen GBIF as a datasource, but have not supplied GBIF login information. Please create a GBIFLogin object using GBIFLoginManager.\n");
+    return(NULL);
+  }
+  
+  if(!file.exists(GBIFLogin)){
+    warning("You have specified a non-existant location for your GBIF data downloads.\n");
     return(NULL);
   }
 
