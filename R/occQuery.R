@@ -35,7 +35,7 @@ occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, options =
   }
 
   #Check to see if the sources input are actually ones used by occQuery
-  sources <- c("gbif"); #sources
+  sources <- c("gbif", "bien"); #sources
   if(sum(!datasources %in% sources) > 0){
     warning(paste("The following datasources are not implemented in occQuery(): ", datasources[!datasources %in% sources], sep = ""));
     return(NULL);
@@ -64,8 +64,12 @@ occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, options =
     temp <- getGBIFpoints(taxon = i, GBIFLogin = login);
     occSearchResults[[i]] <- temp;
   }
-  #BIEN some day
-
+  
+  #For BIEN
+  for (i in searchTaxa){
+    temp <- getBIENpoints(taxon = i);
+    occSearchResults[[i]] <- temp;
+  }
   #Putting results into BridgeTree object
   queryResults@occResults <- occSearchResults;
 

@@ -27,30 +27,22 @@ getBIENpoints<-function(taxon){
   dayCollected <- as.numeric(format(occs$date_collected, format = "%d"))
   occs <- cbind(occs, dayCollected, monthCollected, yearCollected)
 
-  #Get data sources
-  datasources<-unique(occs$datasource_id[!is.na(occs$datasource_id)]);
-  query<-paste("WITH a AS (SELECT * FROM datasource where datasource_id in (",
-              paste(shQuote(datasources, type = "sh"),collapse = ', '),"))
-             SELECT * FROM datasource where datasource_id in (SELECT proximate_provider_datasource_id FROM a) OR datasource_id in (SELECT datasource_id FROM a);");
-  sources <- BIEN:::.BIEN_sql(query);
-
-  suppressWarnings(occs<-merge(x = occs,y = sources,by.x = "datasource_id",
-                               by.y = "datasource_id"));
+  #Tidying up data table
 
   outdata<-occs[c('scrubbed_species_binomial',
                   'longitude','latitude','dayCollected', 'monthCollected',
-                  'yearCollected', 'datasource','dataset','datasource_id')];
+                  'yearCollected', 'dataset','datasource_id')];
   dataService <- rep("BIEN", nrow(outdata));
   outdata <- cbind(outdata, dataService);
-  outdata$license<-"CC BY-NC-ND";
-  outdata$database<-"BIEN";
 
-  #Merge sources with occs
-  citations <- BIEN::BIEN_metadata_citation(occs);
+  #Get metadata
+  occMetadata <- BIEN::BIEN_metadata_citation(occs);
+  occMetadata$license<-"CC BY-NC-ND";
 
+  #Package it all up
   outlist<-list();
   outlist[[1]]<-outdata;
-  outlist[[2]]<-citations;
+  outlist[[2]]<-occMetadata;
 
   return(outlist);
 }

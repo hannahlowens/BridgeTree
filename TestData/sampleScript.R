@@ -16,5 +16,3 @@ myBridgeTreeObject <- occQuery(x = myBridgeTreeObject, GBIFLogin = login);
 
 #Get citations
 myOccCitations <- occCitation(myBridgeTreeObject);
-
-

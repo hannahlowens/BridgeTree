@@ -11,7 +11,7 @@ library(rgbif)
 #' @return A list containing (1) a dataframe of occurrence data; (2) GBIF search metadata
 #'
 #' @examples
-#' getGBIFpoints(taxon="Gadus morhua", limit = 1000);
+#' getGBIFpoints(taxon="Gadus morhua");
 #'
 #' @export
 
@@ -36,8 +36,11 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin){
                        occFromGBIF$decimalLatitude, occFromGBIF$day,
                        occFromGBIF$month, occFromGBIF$year,
                        occFromGBIF$datasetID, occFromGBIF$datasetKey)
+  dataService <- rep("BIEN", nrow(occFromGBIF));
+  occFromGBIF <- cbind(occFromGBIF, dataService);
   colnames(occFromGBIF) <- c("Species", "Longitude", "Latitude", "CollDay",
-                             "CollMonth", "CollYear", "Dataset", "DatasetKey")
+                             "CollMonth", "CollYear", "Dataset", "DatasetKey",
+                             "DataService")
   occMetadata <- rgbif::occ_download_meta(occD[1])
 
   #Preparing list for return
