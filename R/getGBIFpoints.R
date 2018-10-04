@@ -50,8 +50,9 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
   occFromGBIF <- cbind(occFromGBIF, dataService);
   colnames(occFromGBIF) <- c("gbifID", "Species", "Longitude", "Latitude",
                              "CollDay", "CollMonth", "CollYear", "Dataset",
-                             "DatasetKey", "DataService")
-  occMetadata <- rgbif::occ_download_meta(occD[1])
+                             "DatasetKey", "DataService");
+  occFromGBIF <- as.data.frame(occFromGBIF);
+  occMetadata <- rgbif::occ_download_meta(occD[1]);
 
   #Preparing list for return
   outlist<-list();

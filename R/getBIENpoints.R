@@ -34,6 +34,7 @@ getBIENpoints<-function(taxon){
                   'yearCollected', 'dataset','datasource_id')];
   dataService <- rep("BIEN", nrow(outdata));
   outdata <- cbind(outdata, dataService);
+  outdata <- as.data.frame(outdata);
 
   #Get metadata
   occMetadata <- BIEN::BIEN_metadata_citation(occs);
