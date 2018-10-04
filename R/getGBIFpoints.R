@@ -23,13 +23,20 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
                        user = GBIFLogin@username, email = GBIFLogin@email,
                        pwd = GBIFLogin@pwd);
 
-  print(paste("Please be patient while GBIF prepares your download for ", taxon, ". This can take some time."))
+  print(paste("Please be patient while GBIF prepares your download for ", taxon, ". This can take some time."), sep = "");
   while (rgbif::occ_download_meta(occD[1])$status != "SUCCEEDED"){
     Sys.sleep(20);
     print(paste("Still waiting for", taxon, "download preparation to be completed."))
   }
 
-  dir.create(file.path(setwd(GBIFDownloadDirectory), taxon), showWarnings = FALSE);
+  #To avoid recursion error
+  if(getwd() == setwd(GBIFDownloadDirectory)){
+    dir.create(taxon, showWarnings = F);
+  }
+  else{
+    dir.create(file.path(setwd(GBIFDownloadDirectory), taxon), 
+               showWarnings = FALSE);
+  }
   res <- rgbif::occ_download_get(key=occD[1], overwrite=TRUE,
                                  file.path(getwd(), taxon));
   occFromGBIF <- rgbif::occ_download_import(res);
