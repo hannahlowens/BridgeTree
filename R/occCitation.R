@@ -45,7 +45,7 @@ occCitation <-function(x = NULL){
   #sources <- BIEN:::.BIEN_sql(query);
   
   #suppressWarnings(occs<-merge(x = occs,y = sources,by.x = "datasource_id",
-                               by.y = "datasource_id"));
+  #                             by.y = "datasource_id"));
   
   #Tidying up the list
   citationList <- sort(unlist(citationList));
