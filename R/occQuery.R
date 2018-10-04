@@ -2,30 +2,37 @@
 #'
 #' @description Takes rectified list of specimens from \code{\link{studyTaxonList}} and returns point data from \code{\link{rgbif}} with metadata.
 #'
-#' @param x An object of class \code{\link{bridgeTreeData}} (the results of a \code{\link{studyTaxonList}} search).
+#' @param x An object of class \code{\link{bridgeTreeData}} (the results of a \code{\link{studyTaxonList}} search) OR a vector with a list of species names. Note: If the latter, taxonomic rectfication uses EOL and NCBI taxonomies. If you want more control than this, use \code{\link{studyTaxonList}} to create a \code{\link{bridgeTreeData}} object first.
 #'
-#' @param datasources A vector of occurrence datasources to search. This is currently limited to GBIF, but may expand in the future.
+#' @param datasources A vector of occurrence datasources to search. This is currently limited to GBIF and BIEN, but may expand in the future.
 #'
 #' @param GBIFLogin An object of class \code{\link{GBIFLogin}} to log in to GBIF to begin the download.
+#' 
+#' @param GBIFDownloadDirectory An optional argument that specifies the local directory where GBIF downloads will be saved.
 #'
 #' @param options A vector of options to pass to \code{\link{occ_download}}.
 #'
 #' @return The object of class \code{\link{bridgeTreeData}} supplied by the user as an argument, with occurrence data search results, as well as metadata on the occurrence sources queried.
 #'
 #' @examples
-#' ## PLACEHOLDER
-#' studyTaxonList(x = phylogeny, datasources = c('NCBI', 'EOL'));
+#' ## If you have already created a BridgeTree object
+#' occQuery(x = myBridgTreeObject, datasources = c("gbif", "bien"), GBIFLogin = myLogin, GBIFDownloadDirectory = "./Desktop");
 #'
-#' ## PLACEHOLDER
-#' studyTaxonList(x = c("Buteo buteo", "Buteo buteo hartedi", "Buteo japonicus"), datasources = c('NCBI', 'EOL'));
+#' ## If you don't have a BridgeTree object yet
+#' occQuery(x = c("Buteo buteo", "Protea cynaroides"), datasources = c("gbif", "bien"), GBIFLogin = myLogin, GBIFDownloadDirectory = "./Desktop");
 #'
 #' @export
 
-occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, GBIFDownloadDirectory = NULL, options = NULL) {
+occQuery <- function(x = NULL, datasources = c("gbif", "bien"), GBIFLogin = NULL, GBIFDownloadDirectory = NULL, options = NULL) {
   #Error check input x.
-  if (!class(x)=="bridgeTreeData"){
-    warning("Input x is not of class 'bridgeTreeData'. Input x must be result of a studyTaxonList() search.\n");
+  if (!class(x)=="bridgeTreeData" && !is.vector(x)){
+    warning("Input x is not of class 'bridgeTreeData', nor is it a vector. Input x must be result of a studyTaxonList() search OR a vector with a list of taxon names.\n");
     return(NULL);
+  }
+  
+  #Instantiate a BridgeTree data object if one was not supplied
+  if(class(x) != "bridgeTreeData"){
+    x <- studyTaxonList(x);
   }
 
   #Error check input datasources.
@@ -35,12 +42,7 @@ occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, GBIFDownl
   }
   
   #Error check input GBIF directory.
-  if ("gbif" %in% datasources && !is.null(GBIFDownloadDirectory) && class(GBIFDownloadDirectory) != "characer"){
-    warning("Input GBIFDownload directory is not of class 'character'.\n");
-    return(NULL);
-  }
-
-  if ("gbif" %in% datasources && !is.null(GBIFDownloadDirectory) && class(GBIFDownloadDirectory) != "characer"){
+  if ("gbif" %in% datasources && !is.null(GBIFDownloadDirectory) && class(GBIFDownloadDirectory) != "character"){
     warning("Input GBIFDownload directory is not of class 'character'.\n");
     return(NULL);
   }
@@ -57,18 +59,18 @@ occQuery <- function(x = NULL, datasources = "gbif", GBIFLogin = NULL, GBIFDownl
 
   #If GBIF was selected, check to see if GBIF login information is supplied.
   if ("gbif" %in% datasources && !class(GBIFLogin)=="GBIFLogin"){
-    warning("You have chosen GBIF as a datasource, but have not supplied GBIF login information. Please create a GBIFLogin object using GBIFLoginManager.\n");
+    warning("You have chosen GBIF as a datasource, but have not supplied GBIF login information. Please create a GBIFLogin object using GBIFLoginManager().\n");
     return(NULL);
   }
   
-  if(!file.exists(GBIFLogin)){
+  if(!file.exists(GBIFDownloadDirectory)){
     warning("You have specified a non-existant location for your GBIF data downloads.\n");
     return(NULL);
   }
 
   #Get time stamp for search
   x@occurrenceSearchDate <- as.character(Sys.Date(), format = "%d %B, %Y");
-
+  
   #Occurrence queries for each species
   queryResults <- x;
 

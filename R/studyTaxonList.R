@@ -17,7 +17,7 @@
 #'
 #' @export
 
-studyTaxonList <- function(x = NULL, datasources = NULL) {
+studyTaxonList <- function(x = NULL, datasources = c('NCBI', 'EOL')) {
   #Error check inputs (x).
   if (!class(x) == "phylo" & !(is.vector(class(x))&&class(x)=="character")){
     warning("Target input invalid. Input must be of class 'phylo' or a vector of class 'character'.\n");

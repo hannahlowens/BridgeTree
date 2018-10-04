@@ -33,15 +33,17 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
   res <- rgbif::occ_download_get(key=occD[1], overwrite=TRUE,
                                  file.path(getwd(), taxon));
   occFromGBIF <- rgbif::occ_download_import(res);
-  occFromGBIF <- data.frame(occFromGBIF$species, occFromGBIF$decimalLongitude,
-                       occFromGBIF$decimalLatitude, occFromGBIF$day,
-                       occFromGBIF$month, occFromGBIF$year,
-                       occFromGBIF$datasetID, occFromGBIF$datasetKey)
+  occFromGBIF <- data.frame(occFromGBIF$gbifID, occFromGBIF$species,
+                            occFromGBIF$decimalLongitude,
+                            occFromGBIF$decimalLatitude, 
+                            occFromGBIF$day, occFromGBIF$month,
+                            occFromGBIF$year, occFromGBIF$datasetID,
+                            occFromGBIF$datasetKey)
   dataService <- rep("BIEN", nrow(occFromGBIF));
   occFromGBIF <- cbind(occFromGBIF, dataService);
-  colnames(occFromGBIF) <- c("Species", "Longitude", "Latitude", "CollDay",
-                             "CollMonth", "CollYear", "Dataset", "DatasetKey",
-                             "DataService")
+  colnames(occFromGBIF) <- c("gbifID", "Species", "Longitude", "Latitude",
+                             "CollDay", "CollMonth", "CollYear", "Dataset",
+                             "DatasetKey", "DataService")
   occMetadata <- rgbif::occ_download_meta(occD[1])
 
   #Preparing list for return
