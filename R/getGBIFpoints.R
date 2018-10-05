@@ -45,7 +45,7 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
                             occFromGBIF$day, occFromGBIF$month,
                             occFromGBIF$year, occFromGBIF$datasetID,
                             occFromGBIF$datasetKey)
-  dataService <- rep("BIEN", nrow(occFromGBIF));
+  dataService <- rep("GBIF", nrow(occFromGBIF));
   occFromGBIF <- cbind(occFromGBIF, dataService);
   colnames(occFromGBIF) <- c("gbifID", "Species", "Longitude", "Latitude",
                              "CollDay", "CollMonth", "CollYear", "Dataset",
