@@ -7,15 +7,17 @@ library(rgbif)
 #' @param taxon A single species
 #'
 #' @param GBIFLogin An object of class \code{\link{GBIFLogin}} to log in to GBIF to begin the download.
+#' 
+#' @param GBIFDownloadDirectory An optional argument that specifies the local directory where GBIF downloads will be saved. If this is not specified, the downloads will be saved to your current working directory.
 #'
 #' @return A list containing (1) a dataframe of occurrence data; (2) GBIF search metadata
 #'
 #' @examples
-#' getGBIFpoints(taxon="Gadus morhua");
+#' getGBIFpoints(taxon="Gadus morhua", GBIFLogin = myGBIFLogin, GBIFDownloadDirectory = NULL);
 #'
 #' @export
 
-getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GBIFDownloadDirectory){
+getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GBIFDownloadDirectory, GBIFOverwrite = F){
 
   key <- rgbif::name_suggest(q=taxon, rank='species')$key[1]
   occD <- rgbif::occ_download(paste("taxonKey = ", key, sep = ""),
@@ -25,7 +27,7 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
 
   print(paste("Please be patient while GBIF prepares your download for ", taxon, ". This can take some time.", sep = ""));
   while (rgbif::occ_download_meta(occD[1])$status != "SUCCEEDED"){
-    Sys.sleep(20);
+    Sys.sleep(30);
     print(paste("Still waiting for", taxon, "download preparation to be completed."))
   }
 
