@@ -23,20 +23,17 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
                        user = GBIFLogin@username, email = GBIFLogin@email,
                        pwd = GBIFLogin@pwd);
 
-  print(paste("Please be patient while GBIF prepares your download for", taxon, ". This can take some time.", sep = ""));
+  print(paste("Please be patient while GBIF prepares your download for ", taxon, ". This can take some time.", sep = ""));
   while (rgbif::occ_download_meta(occD[1])$status != "SUCCEEDED"){
     Sys.sleep(20);
     print(paste("Still waiting for", taxon, "download preparation to be completed."))
   }
 
-  #To avoid recursion error
-  if(getwd() == setwd(GBIFDownloadDirectory)){
-    dir.create(taxon, showWarnings = F);
-  }
-  else{
-    dir.create(file.path(setwd(GBIFDownloadDirectory), taxon), 
+  #Create folders for each species at the designated location
+  dir.create(file.path(GBIFDownloadDirectory, taxon), 
                showWarnings = FALSE);
-  }
+  presWD <- getwd()
+  setwd(GBIFDownloadDirectory);
   
   #Getting the download from GBIF and loading it into R
   res <- rgbif::occ_download_get(key=occD[1], overwrite=TRUE,
@@ -61,5 +58,6 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
   outlist[[1]]<-occFromGBIF;
   outlist[[2]]<-occMetadata;
 
+  setwd(presWD);
   return(outlist);
 }
