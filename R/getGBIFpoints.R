@@ -17,9 +17,11 @@ library(rgbif)
 #'
 #' @export
 
-getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GBIFDownloadDirectory, GBIFOverwrite = F){
+getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GBIFDownloadDirectory, limit = NULL){
 
   key <- rgbif::name_suggest(q=taxon, rank='species')$key[1]
+  
+  
   occD <- rgbif::occ_download(paste("taxonKey = ", key, sep = ""),
                        "hasCoordinate = true", "hasGeospatialIssue = false",
                        user = GBIFLogin@username, email = GBIFLogin@email,
@@ -27,7 +29,7 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
 
   print(paste("Please be patient while GBIF prepares your download for ", taxon, ". This can take some time.", sep = ""));
   while (rgbif::occ_download_meta(occD[1])$status != "SUCCEEDED"){
-    Sys.sleep(30);
+    Sys.sleep(60);
     print(paste("Still waiting for", taxon, "download preparation to be completed."))
   }
 
@@ -49,8 +51,9 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
                             occFromGBIF$datasetKey)
   dataService <- rep("GBIF", nrow(occFromGBIF));
   occFromGBIF <- cbind(occFromGBIF, dataService);
-  colnames(occFromGBIF) <- c("gbifID", "Species", "Longitude", "Latitude",
-                             "CollDay", "CollMonth", "CollYear", "Dataset",
+  colnames(occFromGBIF) <- c("gbifID", "name", "longitude",
+                             "latitude", "day", "month", 
+                             "year", "Dataset",
                              "DatasetKey", "DataService");
   occFromGBIF <- as.data.frame(occFromGBIF);
   occMetadata <- rgbif::occ_download_meta(occD[1]);

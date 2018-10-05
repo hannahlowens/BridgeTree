@@ -6,7 +6,7 @@ library(rgbif)
 #'
 #' @param x An object of class \code{\link{bridgeTreeData}}
 #'
-#' @return A vector with citations for occurrences
+#' @return A dataframe with citations information for occurrences
 #'
 #' @examples
 #' myCitations <- occCitation(x = myBridgeTreeObject);

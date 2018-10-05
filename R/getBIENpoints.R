@@ -33,9 +33,10 @@ getBIENpoints<-function(taxon){
                   'yearCollected', 'dataset','datasource_id')];
   dataService <- rep("BIEN", nrow(outdata));
   outdata <- cbind(outdata, dataService);
-  colnames(outdata) <- c("Species", "Longitude", "Latitude",
-  "CollDay", "CollMonth", "CollYear", "Dataset",
-  "datasource_id", "DataService");
+  colnames(outdata) <- c("name", "longitude",
+                         "latitude", "day", "month", 
+                         "year", "Dataset",
+                         "DatasetKey", "DataService");
   outdata <- as.data.frame(outdata);
 
   #Get metadata
