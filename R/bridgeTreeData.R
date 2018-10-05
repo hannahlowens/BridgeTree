@@ -14,7 +14,7 @@
 #'
 #' @slot occurrenceSearchDate The date on which the occurrence search query was conducted.
 #'
-#' @slot occResults The results of an \code{\link{taxQuery}} search, stored as a named list, each of the items named after a searched taxon and containing a dataframe with occurrence information.
+#' @slot occResults The results of an \code{\link{occQuery}} search, stored as a named list, each of the items named after a searched taxon and containing a dataframe with occurrence information.
 #'
 #' @export
 

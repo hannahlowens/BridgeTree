@@ -57,6 +57,7 @@ getGBIFpoints<-function(taxon, GBIFLogin = GBIFLogin, GBIFDownloadDirectory = GB
   outlist<-list();
   outlist[[1]]<-occFromGBIF;
   outlist[[2]]<-occMetadata;
+  names(outlist) <- c("OccurrenceTable", "Metadata")
 
   setwd(presWD);
   return(outlist);

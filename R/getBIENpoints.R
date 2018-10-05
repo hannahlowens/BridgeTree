@@ -28,7 +28,6 @@ getBIENpoints<-function(taxon){
   occs <- cbind(occs, dayCollected, monthCollected, yearCollected)
 
   #Tidying up data table
-
   outdata<-occs[c('scrubbed_species_binomial',
                   'longitude','latitude','dayCollected', 'monthCollected',
                   'yearCollected', 'dataset','datasource_id')];
@@ -44,6 +43,7 @@ getBIENpoints<-function(taxon){
   outlist<-list();
   outlist[[1]]<-outdata;
   outlist[[2]]<-occMetadata;
+  names(outlist) <- c("OccurrenceTable", "Metadata")
 
   return(outlist);
 }

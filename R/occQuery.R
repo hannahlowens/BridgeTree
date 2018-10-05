@@ -80,18 +80,35 @@ occQuery <- function(x = NULL, datasources = c("gbif", "bien"), GBIFLogin = NULL
 
   #For GBIF
   searchTaxa <- as.character(queryResults@cleanedTaxonomy$`Best Match`);
-  occSearchResults <- vector(mode = "list", length = length(searchTaxa));
-  names(occSearchResults) <- searchTaxa;
-  for (i in searchTaxa){
-    temp <- getGBIFpoints(taxon = i, GBIFLogin = login);
-    occSearchResults[[i]] <- temp;
+  gbifResults <- vector(mode = "list", length = length(searchTaxa));
+  names(gbifResults) <- searchTaxa;
+  if("gbif" %in% datasources){
+    for (i in searchTaxa){
+      temp <- getGBIFpoints(taxon = i, GBIFLogin = login, 
+                            GBIFDownloadDirectory = GBIFDownloadDirectory);
+      gbifResults[[i]] <- temp;
+    }
   }
   
   #For BIEN
-  for (i in searchTaxa){
-    temp <- getBIENpoints(taxon = i);
-    occSearchResults[[i]] <- temp;
+  bienResults <- vector(mode = "list", length = length(searchTaxa));
+  names(bienResults) <- searchTaxa;
+  if("bien" %in% datasources){
+    for (i in searchTaxa){
+      temp <- getBIENpoints(taxon = i);
+      bienResults[[i]] <- temp;
+    }
   }
+  
+  #Merge GBIF and BIEN results
+  occSearchResults <- vector(mode = "list", length = length(searchTaxa));
+  for (i in searchTaxa){
+    bien <- bienResults[[i]];
+    gbif <- gbifResults[[i]]
+    occSearchResults[[i]] <- list(gbif, bien);
+    names(occSearchResults[[i]]) <- c("GBIF", "BIEN");
+  }
+  
   #Putting results into BridgeTree object
   queryResults@occResults <- occSearchResults;
 
